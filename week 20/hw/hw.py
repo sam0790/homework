@@ -1,34 +1,30 @@
 #!/usr/bin/env python
 
 import sys
+import nltk
 from nltk import tokenize
 from collections import Counter
-import nltk
+from nltk.tokenize import wordpunct_tokenize
 
-#stdin = standard input
-for line in sys.stdin:
+cats_file = open('cats_txt.txt','r')
+cats = cats_file.read().replace("\n"," ")
+cats_file.close()  
+
+lower_cat = cats.lower()
+
     
-    #strip white spaces at beginning and end of line
-    lines = line.strip()
+#print(cats)
+tokens = wordpunct_tokenize(cats)
 
-    #split each line into words
-    #words = line.split()
-cats = nltk.corpus.open('cats_txt.txt','r')
-    
-#for line in cats:
-    
-
-tokens = tokenize.word_tokenize(cats)
-
-lower_tokens = [t.lower() for t in tokens]
+#lower_tokens = [t.lower() for t in tokens]
 
 
  
-bow_counter = Counter(lower_tokens)
+bow_counter = Counter(tokens)
 
 #sorted_bow = sorted(bow_counter, key=lambda w:w[1], reverse=True)
 
-print(bow_counter)
+print(bow_counter.most_common())
 
 
 
