@@ -17,14 +17,14 @@ app = Flask(__name__)
 
 @app.route("/all")
 def all():
-    json_url = os.path.join(app.static_folder,"","nobel.json")
+    json_url = os.path.join(app.static_folder,"","nobel1.json")
     data_json = json.load(open(json_url))
     #render_template is always looking in templates folder
     return render_template('index.html',data=data_json)
 
 @app.route("/<year>", methods=['GET'])
 def year_get(year):
-    json_url = os.path.join(app.static_folder,"","nobel.json")
+    json_url = os.path.join(app.static_folder,"","nobel1.json")
     data_json = json.load(open(json_url))
     data = data_json['prizes']
     year = request.view_args['year']
@@ -37,32 +37,39 @@ def year_get(year):
 
 @app.route("/<year>P",methods=['GET','POST'])
 def year_post(year):
-    render_template('form.html')
-    #if request.method == 'POST':
+    #render_template('form.html')
+    if request.method == 'POST':
     #req_data=request.get_json()
-    year = request.form["year"]
-    category = request.form["category"]
-    my_id = request.form["id"]
-    firstname = request.form["firstname"]
-    surname = request.form["surname"]
-    motivation = request.form["motivation"]
-    nobel_year = {'year':year,
+        year = request.form["year"]
+        category = request.form["category"]
+        my_id = request.form["id"]
+        firstname = request.form["firstname"]
+        surname = request.form["surname"]
+        motivation = request.form["motivation"]
+        
+        nobel_year = {'year':year,
                     'category':category,
                       'laureates':[{'id':id,
                                    'firstname':firstname,
                                     'surname':surname,
-                                    'motivation':motivation,
+                                    'motivation':motivation
     
-                                    'share':share}]  
+                                    }]  
                        }
 
-    with open('./static/nobel.json', 'r+') as file:
-        file_data=json.load(file)
-        file_data['prizes'].append(nobel_year)
-        file.seek(0)
-        json.dump(file_data, file, indent=4)
+        with open('./static/nobel.json', 'r+') as file:
+            file_data=json.load(file)
+            file_data['prizes'].append(nobel_year)
+            file.seek(0)
+            json.dump(file_data, file, indent=4)
         
-    return redirect(url_for("nobel_year", year=year))
+        return redirect(url_for("nobel_year", year=year))
+
+
+    else:
+        
+        return render_template("form.html")
+    
         #with open(filename, "w") as file:
         #    json.dump(data, file)
         
